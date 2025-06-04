@@ -9,9 +9,9 @@ use PHPUnit\Framework\TestCase;
 use Tourze\WechatWorkContracts\AgentInterface;
 use Tourze\WechatWorkContracts\CorpInterface;
 use Tourze\WechatWorkContracts\UserInterface;
-use WechatWorkExternalContactBundle\Enum\GroupChatStatus;
 use WechatWorkGroupChatBundle\Entity\GroupChat;
 use WechatWorkGroupChatBundle\Entity\GroupMember;
+use WechatWorkGroupChatBundle\Enum\GroupChatStatus;
 
 /**
  * GroupChat 实体测试用例

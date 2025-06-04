@@ -15,9 +15,9 @@ use WechatWorkBundle\Entity\Agent;
 use WechatWorkBundle\Entity\Corp;
 use WechatWorkBundle\Repository\AgentRepository;
 use WechatWorkBundle\Service\WorkService;
-use WechatWorkExternalContactBundle\Enum\GroupChatStatus;
 use WechatWorkGroupChatBundle\Command\SyncGroupChatListCommand;
 use WechatWorkGroupChatBundle\Entity\GroupChat;
+use WechatWorkGroupChatBundle\Enum\GroupChatStatus;
 use WechatWorkGroupChatBundle\Message\SyncGroupChatDetailMessage;
 use WechatWorkGroupChatBundle\Repository\GroupChatRepository;
 

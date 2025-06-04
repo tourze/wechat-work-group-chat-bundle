@@ -15,7 +15,7 @@ use Tourze\EasyAdmin\Attribute\Permission\AsPermission;
 use Tourze\WechatWorkContracts\AgentInterface;
 use Tourze\WechatWorkContracts\CorpInterface;
 use Tourze\WechatWorkContracts\UserInterface;
-use WechatWorkExternalContactBundle\Enum\GroupChatStatus;
+use WechatWorkGroupChatBundle\Enum\GroupChatStatus;
 use WechatWorkGroupChatBundle\Repository\GroupChatRepository;
 
 #[AsPermission(title: '客户群')]
