@@ -1,6 +1,6 @@
 {
   "name": "tourze/wechat-work-group-chat-bundle",
-  "description": "客户群管理\n",
+  "description": "客户群管理",
   "type": "symfony-bundle",
   "license": "MIT",
   "require": {
