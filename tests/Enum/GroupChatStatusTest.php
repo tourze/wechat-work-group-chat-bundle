@@ -4,7 +4,6 @@ namespace WechatWorkGroupChatBundle\Tests\Enum;
 
 use PHPUnit\Framework\TestCase;
 use WechatWorkGroupChatBundle\Enum\GroupChatStatus;
-use function WechatWorkExternalContactBundle\Tests\Enum\sort;
 
 /**
  * GroupChatStatus枚举测试
@@ -290,7 +289,7 @@ class GroupChatStatusTest extends TestCase
             GroupChatStatus::INHERIT_FINISHED->value,
         ];
         
-        sort($values);
+        \sort($values);
         $expectedValues = [0, 1, 2, 3];
         
         $this->assertSame($expectedValues, $values);
