@@ -172,8 +172,6 @@ class GetGroupChatListRequestTest extends TestCase
         $request->setLimit(100);
         
         $options = $request->getRequestOptions();
-        
-        $this->assertIsArray($options);
         $this->assertArrayHasKey('json', $options);
         $this->assertArrayHasKey('limit', $options['json']);
         $this->assertSame(100, $options['json']['limit']);
@@ -251,11 +249,8 @@ class GetGroupChatListRequestTest extends TestCase
         $request->setStatusFilter(2);
         
         $options = $request->getRequestOptions();
-        
-        $this->assertIsArray($options);
         $this->assertCount(1, $options);
         $this->assertArrayHasKey('json', $options);
-        $this->assertIsArray($options['json']);
         $this->assertGreaterThanOrEqual(2, count($options['json']));
     }
 

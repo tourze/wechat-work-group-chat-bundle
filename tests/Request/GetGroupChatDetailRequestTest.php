@@ -162,10 +162,7 @@ class GetGroupChatDetailRequestTest extends TestCase
         $request->setNeedName(true);
         
         $options = $request->getRequestOptions();
-        
-        $this->assertIsArray($options);
         $this->assertArrayHasKey('json', $options);
-        $this->assertIsArray($options['json']);
         $this->assertArrayHasKey('chat_id', $options['json']);
         $this->assertArrayHasKey('need_name', $options['json']);
         $this->assertCount(2, $options['json']);
@@ -387,7 +384,6 @@ class GetGroupChatDetailRequestTest extends TestCase
         
         // 验证参数结构正确
         $this->assertArrayHasKey('json', $options);
-        $this->assertIsArray($options['json']);
         $this->assertArrayHasKey('chat_id', $options['json']);
         $this->assertArrayHasKey('need_name', $options['json']);
         $this->assertSame($chatId, $options['json']['chat_id']);
@@ -493,7 +489,6 @@ class GetGroupChatDetailRequestTest extends TestCase
         
         // 验证请求数据结构完整性
         $this->assertArrayHasKey('json', $options);
-        $this->assertIsArray($options['json']);
         $this->assertSame($chatId, $options['json']['chat_id']);
         $this->assertSame(1, $options['json']['need_name']);
         

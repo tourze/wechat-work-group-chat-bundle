@@ -52,7 +52,6 @@ class GroupChatStatusTest extends TestCase
         // 测试标签非空
         foreach (GroupChatStatus::cases() as $case) {
             $label = $case->getLabel();
-            $this->assertIsString($label);
             $this->assertNotEmpty($label);
         }
     }
@@ -140,12 +139,9 @@ class GroupChatStatusTest extends TestCase
     {
         // 测试genOptions方法
         $options = GroupChatStatus::genOptions();
-        
-        $this->assertIsArray($options);
         $this->assertCount(4, $options);
         
         foreach ($options as $option) {
-            $this->assertIsArray($option);
             $this->assertArrayHasKey('value', $option);
             $this->assertArrayHasKey('label', $option);
             $this->assertArrayHasKey('text', $option);
@@ -164,8 +160,6 @@ class GroupChatStatusTest extends TestCase
     {
         // 测试toArray方法
         $array = GroupChatStatus::NORMAL->toArray();
-        
-        $this->assertIsArray($array);
         $this->assertArrayHasKey('value', $array);
         $this->assertArrayHasKey('label', $array);
         $this->assertSame(0, $array['value']);
@@ -176,8 +170,6 @@ class GroupChatStatusTest extends TestCase
     {
         // 测试toSelectItem方法
         $item = GroupChatStatus::RESIGN->toSelectItem();
-        
-        $this->assertIsArray($item);
         $this->assertArrayHasKey('value', $item);
         $this->assertArrayHasKey('label', $item);
         $this->assertArrayHasKey('text', $item);
