@@ -128,7 +128,7 @@ class GroupChatTest extends TestCase
 
     public function test_setCreateTime_withValidDateTime_setsTimeCorrectly(): void
     {
-        $createTime = new \DateTime('2024-01-15 10:30:00');
+        $createTime = new \DateTimeImmutable('2024-01-15 10:30:00');
         
         $result = $this->groupChat->setCreateTime($createTime);
         
@@ -139,7 +139,7 @@ class GroupChatTest extends TestCase
 
     public function test_setCreateTime_withNull_setsNull(): void
     {
-        $this->groupChat->setCreateTime(new \DateTime());
+        $this->groupChat->setCreateTime(new \DateTimeImmutable());
         
         $result = $this->groupChat->setCreateTime(null);
         
@@ -470,7 +470,7 @@ class GroupChatTest extends TestCase
         /** @var UserInterface&MockObject $owner */
         $owner = $this->createMock(UserInterface::class);
         
-        $createTime = new \DateTime('2024-01-15 10:00:00');
+        $createTime = new \DateTimeImmutable('2024-01-15 10:00:00');
         
         $result = $this->groupChat
             ->setChatId('chain_test_chat_id')
@@ -515,7 +515,7 @@ class GroupChatTest extends TestCase
     public function test_edgeCases_dateTimeTypes(): void
     {
         // 测试DateTime
-        $dateTime = new \DateTime('2024-01-15 12:30:45');
+        $dateTime = new \DateTimeImmutable('2024-01-15 12:30:45');
         $this->groupChat->setCreateTime($dateTime);
         $this->assertInstanceOf(\DateTimeImmutable::class, $this->groupChat->getCreateTime());
         $this->assertEquals($dateTime->format('Y-m-d H:i:s'), $this->groupChat->getCreateTime()->format('Y-m-d H:i:s'));
@@ -584,7 +584,7 @@ class GroupChatTest extends TestCase
         /** @var UserInterface&MockObject $admin */
         $admin = $this->createMock(UserInterface::class);
         
-        $createTime = new \DateTime('2024-01-15 10:00:00');
+        $createTime = new \DateTimeImmutable('2024-01-15 10:00:00');
         
         // 创建群聊
         $this->groupChat

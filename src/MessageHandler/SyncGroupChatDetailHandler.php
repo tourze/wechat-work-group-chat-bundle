@@ -2,7 +2,7 @@
 
 namespace WechatWorkGroupChatBundle\MessageHandler;
 
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -48,7 +48,7 @@ class SyncGroupChatDetailHandler
 
         $group->setName($response['group_chat']['name']);
         $group->setNotice($response['group_chat']['notice']);
-        $group->setCreateTime(Carbon::createFromTimestamp($response['group_chat']['create_time'], date_default_timezone_get()));
+        $group->setCreateTime(CarbonImmutable::createFromTimestamp($response['group_chat']['create_time'], date_default_timezone_get()));
 
         // 拥有者
         $user = $this->userLoader->loadUserByUserIdAndCorp($response['group_chat']['owner'], $group->getCorp());
@@ -74,7 +74,7 @@ class SyncGroupChatDetailHandler
             $member->setGroupChat($group);
             $member->setUserId($item['userid']);
             $member->setType($item['type']);
-            $member->setJoinTime(Carbon::createFromTimestamp($item['join_time'], date_default_timezone_get()));
+            $member->setJoinTime(CarbonImmutable::createFromTimestamp($item['join_time'], date_default_timezone_get()));
             $member->setJoinScene($item['join_scene']);
             $member->setInvitorUserId($item['invitor']['userid']);
             $member->setGroupNickname($item['group_nickname']);

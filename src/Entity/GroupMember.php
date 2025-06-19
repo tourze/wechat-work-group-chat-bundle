@@ -92,7 +92,7 @@ class GroupMember implements \Stringable
 
     public function setJoinTime(?\DateTimeImmutable $joinTime): static
     {
-        $this->joinTime = $joinTime instanceof \DateTimeImmutable ? $joinTime : ($joinTime !== null ? \DateTimeImmutable::createFromInterface($joinTime) : null);
+        $this->joinTime = $joinTime instanceof \DateTimeImmutable ? $joinTime : ($joinTime ? \DateTimeImmutable::createFromInterface($joinTime) : null);
 
         return $this;
     }

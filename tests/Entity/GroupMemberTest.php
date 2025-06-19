@@ -129,7 +129,7 @@ class GroupMemberTest extends TestCase
 
     public function test_setJoinTime_withValidDateTime_setsTimeCorrectly(): void
     {
-        $joinTime = new \DateTime('2024-01-15 10:30:00');
+        $joinTime = new \DateTimeImmutable('2024-01-15 10:30:00');
         
         $result = $this->groupMember->setJoinTime($joinTime);
         
@@ -140,7 +140,7 @@ class GroupMemberTest extends TestCase
 
     public function test_setJoinTime_withNull_setsNull(): void
     {
-        $this->groupMember->setJoinTime(new \DateTime());
+        $this->groupMember->setJoinTime(new \DateTimeImmutable());
         
         $result = $this->groupMember->setJoinTime(null);
         
@@ -322,7 +322,7 @@ class GroupMemberTest extends TestCase
         /** @var GroupChat&MockObject $groupChat */
         $groupChat = $this->createMock(GroupChat::class);
         
-        $joinTime = new \DateTime('2024-01-15 10:00:00');
+        $joinTime = new \DateTimeImmutable('2024-01-15 10:00:00');
         $createTime = new \DateTimeImmutable('2024-01-01 08:00:00');
         $updateTime = new \DateTimeImmutable('2024-01-30 18:00:00');
         
@@ -393,7 +393,7 @@ class GroupMemberTest extends TestCase
     public function test_edgeCases_dateTimeTypes(): void
     {
         // 测试DateTime
-        $dateTime = new \DateTime('2024-01-15 12:30:45');
+        $dateTime = new \DateTimeImmutable('2024-01-15 12:30:45');
         $this->groupMember->setJoinTime($dateTime);
         $this->assertInstanceOf(\DateTimeImmutable::class, $this->groupMember->getJoinTime());
         $this->assertEquals($dateTime->format('Y-m-d H:i:s'), $this->groupMember->getJoinTime()->format('Y-m-d H:i:s'));
@@ -404,7 +404,7 @@ class GroupMemberTest extends TestCase
         $this->assertSame($dateTimeImmutable, $this->groupMember->getJoinTime());
         
         // 测试不同时区的DateTime
-        $dateTimeUtc = new \DateTime('2024-03-15 14:30:00', new \DateTimeZone('UTC'));
+        $dateTimeUtc = new \DateTimeImmutable('2024-03-15 14:30:00', new \DateTimeZone('UTC'));
         $this->groupMember->setJoinTime($dateTimeUtc);
         $this->assertInstanceOf(\DateTimeImmutable::class, $this->groupMember->getJoinTime());
         $this->assertEquals($dateTimeUtc->format('Y-m-d H:i:s'), $this->groupMember->getJoinTime()->format('Y-m-d H:i:s'));
@@ -419,7 +419,7 @@ class GroupMemberTest extends TestCase
         /** @var GroupChat&MockObject $groupChat */
         $groupChat = $this->createMock(GroupChat::class);
         
-        $joinTime = new \DateTime('2024-01-15 14:30:00');
+        $joinTime = new \DateTimeImmutable('2024-01-15 14:30:00');
         $createTime = new \DateTimeImmutable('2024-01-15 14:30:01');
         
         // 模拟通过邀请加入群聊的场景
@@ -451,7 +451,7 @@ class GroupMemberTest extends TestCase
         /** @var GroupChat&MockObject $groupChat */
         $groupChat = $this->createMock(GroupChat::class);
         
-        $joinTime = new \DateTime('2024-01-16 09:20:00');
+        $joinTime = new \DateTimeImmutable('2024-01-16 09:20:00');
         
         // 模拟通过二维码加入群聊的场景
         $this->groupMember
@@ -476,7 +476,7 @@ class GroupMemberTest extends TestCase
         /** @var GroupChat&MockObject $groupChat */
         $groupChat = $this->createMock(GroupChat::class);
         
-        $joinTime = new \DateTime('2024-01-10 08:00:00');
+        $joinTime = new \DateTimeImmutable('2024-01-10 08:00:00');
         
         // 模拟企业内部成员加入群聊的场景
         $this->groupMember
@@ -519,7 +519,7 @@ class GroupMemberTest extends TestCase
 
     public function test_businessScenario_memberTimeSequence(): void
     {
-        $joinTime = new \DateTime('2024-01-15 10:00:00');
+        $joinTime = new \DateTimeImmutable('2024-01-15 10:00:00');
         $createTime = new \DateTimeImmutable('2024-01-15 10:00:01');
         $updateTime = new \DateTimeImmutable('2024-01-20 15:30:00');
         

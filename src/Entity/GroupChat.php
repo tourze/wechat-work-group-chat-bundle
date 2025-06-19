@@ -94,7 +94,7 @@ class GroupChat implements \Stringable
 
     public function setCreateTime(?\DateTimeImmutable $createdAt): self
     {
-        $this->createTime = $createdAt instanceof \DateTimeImmutable ? $createdAt : ($createdAt !== null ? \DateTimeImmutable::createFromInterface($createdAt) : null);
+        $this->createTime = $createdAt instanceof \DateTimeImmutable ? $createdAt : ($createdAt ? \DateTimeImmutable::createFromInterface($createdAt) : null);
 
         return $this;
     }
