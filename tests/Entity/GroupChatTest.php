@@ -133,7 +133,8 @@ class GroupChatTest extends TestCase
         $result = $this->groupChat->setCreateTime($createTime);
         
         $this->assertSame($this->groupChat, $result);
-        $this->assertSame($createTime, $this->groupChat->getCreateTime());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $this->groupChat->getCreateTime());
+        $this->assertEquals($createTime->format('Y-m-d H:i:s'), $this->groupChat->getCreateTime()->format('Y-m-d H:i:s'));
     }
 
     public function test_setCreateTime_withNull_setsNull(): void
@@ -489,7 +490,8 @@ class GroupChatTest extends TestCase
         $this->assertSame($agent, $this->groupChat->getAgent());
         $this->assertSame($corp, $this->groupChat->getCorp());
         $this->assertSame($owner, $this->groupChat->getOwner());
-        $this->assertSame($createTime, $this->groupChat->getCreateTime());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $this->groupChat->getCreateTime());
+        $this->assertEquals($createTime->format('Y-m-d H:i:s'), $this->groupChat->getCreateTime()->format('Y-m-d H:i:s'));
     }
 
     /**
@@ -515,7 +517,8 @@ class GroupChatTest extends TestCase
         // 测试DateTime
         $dateTime = new \DateTime('2024-01-15 12:30:45');
         $this->groupChat->setCreateTime($dateTime);
-        $this->assertSame($dateTime, $this->groupChat->getCreateTime());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $this->groupChat->getCreateTime());
+        $this->assertEquals($dateTime->format('Y-m-d H:i:s'), $this->groupChat->getCreateTime()->format('Y-m-d H:i:s'));
         
         // 测试DateTimeImmutable
         $dateTimeImmutable = new \DateTimeImmutable('2024-02-20 09:15:30');

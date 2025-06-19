@@ -10,7 +10,7 @@ use WechatWorkGroupChatBundle\Repository\GroupMemberRepository;
 
 #[ORM\Entity(repositoryClass: GroupMemberRepository::class)]
 #[ORM\Table(name: 'wechat_work_group_member', options: ['comment' => '客户群成员'])]
-class GroupMember
+class GroupMember implements \Stringable
 {
     use TimestampableAware;
     #[ORM\Id]
@@ -23,25 +23,25 @@ class GroupMember
     #[ORM\JoinColumn(nullable: false)]
     private ?GroupChat $groupChat = null;
 
-    #[ORM\Column(length: 128)]
+    #[ORM\Column(length: 128, options: ['comment' => '用户ID'])]
     private ?string $userId = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: true, options: ['comment' => '成员类型'])]
     private ?int $type = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $joinTime = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['comment' => '加入时间'])]
+    private ?\DateTimeImmutable $joinTime = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: true, options: ['comment' => '加入场景'])]
     private ?int $joinScene = null;
 
-    #[ORM\Column(length: 128, nullable: true)]
+    #[ORM\Column(length: 128, nullable: true, options: ['comment' => '邀请人用户ID'])]
     private ?string $invitorUserId = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
+    #[ORM\Column(length: 100, nullable: true, options: ['comment' => '群昵称'])]
     private ?string $groupNickname = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
+    #[ORM\Column(length: 100, nullable: true, options: ['comment' => '名称'])]
     private ?string $name = null;
 
     public function getId(): ?string
@@ -85,14 +85,14 @@ class GroupMember
         return $this;
     }
 
-    public function getJoinTime(): ?\DateTimeInterface
+    public function getJoinTime(): ?\DateTimeImmutable
     {
         return $this->joinTime;
     }
 
     public function setJoinTime(?\DateTimeInterface $joinTime): static
     {
-        $this->joinTime = $joinTime;
+        $this->joinTime = $joinTime instanceof \DateTimeImmutable ? $joinTime : ($joinTime !== null ? \DateTimeImmutable::createFromInterface($joinTime) : null);
 
         return $this;
     }
@@ -143,4 +143,10 @@ class GroupMember
         $this->name = $name;
 
         return $this;
-    }}
+    }
+
+    public function __toString(): string
+    {
+        return $this->name ?? $this->groupNickname ?? $this->userId ?? '';
+    }
+}

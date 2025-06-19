@@ -134,7 +134,8 @@ class GroupMemberTest extends TestCase
         $result = $this->groupMember->setJoinTime($joinTime);
         
         $this->assertSame($this->groupMember, $result);
-        $this->assertSame($joinTime, $this->groupMember->getJoinTime());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $this->groupMember->getJoinTime());
+        $this->assertEquals($joinTime->format('Y-m-d H:i:s'), $this->groupMember->getJoinTime()->format('Y-m-d H:i:s'));
     }
 
     public function test_setJoinTime_withNull_setsNull(): void
@@ -279,7 +280,7 @@ class GroupMemberTest extends TestCase
 
     public function test_setCreateTime_withValidDateTime_setsTimeCorrectly(): void
     {
-        $createTime = new \DateTime('2024-01-01 08:00:00');
+        $createTime = new \DateTimeImmutable('2024-01-01 08:00:00');
         
         $this->groupMember->setCreateTime($createTime);
         
@@ -288,7 +289,7 @@ class GroupMemberTest extends TestCase
 
     public function test_setCreateTime_withNull_setsNull(): void
     {
-        $this->groupMember->setCreateTime(new \DateTime());
+        $this->groupMember->setCreateTime(new \DateTimeImmutable());
         
         $this->groupMember->setCreateTime(null);
         
@@ -297,7 +298,7 @@ class GroupMemberTest extends TestCase
 
     public function test_setUpdateTime_withValidDateTime_setsTimeCorrectly(): void
     {
-        $updateTime = new \DateTime('2024-01-30 18:30:00');
+        $updateTime = new \DateTimeImmutable('2024-01-30 18:30:00');
         
         $this->groupMember->setUpdateTime($updateTime);
         
@@ -306,7 +307,7 @@ class GroupMemberTest extends TestCase
 
     public function test_setUpdateTime_withNull_setsNull(): void
     {
-        $this->groupMember->setUpdateTime(new \DateTime());
+        $this->groupMember->setUpdateTime(new \DateTimeImmutable());
         
         $this->groupMember->setUpdateTime(null);
         
@@ -322,8 +323,8 @@ class GroupMemberTest extends TestCase
         $groupChat = $this->createMock(GroupChat::class);
         
         $joinTime = new \DateTime('2024-01-15 10:00:00');
-        $createTime = new \DateTime('2024-01-01 08:00:00');
-        $updateTime = new \DateTime('2024-01-30 18:00:00');
+        $createTime = new \DateTimeImmutable('2024-01-01 08:00:00');
+        $updateTime = new \DateTimeImmutable('2024-01-30 18:00:00');
         
         $result = $this->groupMember
             ->setGroupChat($groupChat)
@@ -342,7 +343,8 @@ class GroupMemberTest extends TestCase
         $this->assertSame($groupChat, $this->groupMember->getGroupChat());
         $this->assertSame('chain_user_123', $this->groupMember->getUserId());
         $this->assertSame(1, $this->groupMember->getType());
-        $this->assertSame($joinTime, $this->groupMember->getJoinTime());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $this->groupMember->getJoinTime());
+        $this->assertEquals($joinTime->format('Y-m-d H:i:s'), $this->groupMember->getJoinTime()->format('Y-m-d H:i:s'));
         $this->assertSame(2, $this->groupMember->getJoinScene());
         $this->assertSame('invitor_456', $this->groupMember->getInvitorUserId());
         $this->assertSame('链式测试昵称', $this->groupMember->getGroupNickname());
@@ -393,7 +395,8 @@ class GroupMemberTest extends TestCase
         // 测试DateTime
         $dateTime = new \DateTime('2024-01-15 12:30:45');
         $this->groupMember->setJoinTime($dateTime);
-        $this->assertSame($dateTime, $this->groupMember->getJoinTime());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $this->groupMember->getJoinTime());
+        $this->assertEquals($dateTime->format('Y-m-d H:i:s'), $this->groupMember->getJoinTime()->format('Y-m-d H:i:s'));
         
         // 测试DateTimeImmutable
         $dateTimeImmutable = new \DateTimeImmutable('2024-02-20 09:15:30');
@@ -403,7 +406,8 @@ class GroupMemberTest extends TestCase
         // 测试不同时区的DateTime
         $dateTimeUtc = new \DateTime('2024-03-15 14:30:00', new \DateTimeZone('UTC'));
         $this->groupMember->setJoinTime($dateTimeUtc);
-        $this->assertSame($dateTimeUtc, $this->groupMember->getJoinTime());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $this->groupMember->getJoinTime());
+        $this->assertEquals($dateTimeUtc->format('Y-m-d H:i:s'), $this->groupMember->getJoinTime()->format('Y-m-d H:i:s'));
         $this->assertEquals('UTC', $dateTimeUtc->getTimezone()->getName());
     }
 
@@ -416,7 +420,7 @@ class GroupMemberTest extends TestCase
         $groupChat = $this->createMock(GroupChat::class);
         
         $joinTime = new \DateTime('2024-01-15 14:30:00');
-        $createTime = new \DateTime('2024-01-15 14:30:01');
+        $createTime = new \DateTimeImmutable('2024-01-15 14:30:01');
         
         // 模拟通过邀请加入群聊的场景
         $this->groupMember
@@ -516,8 +520,8 @@ class GroupMemberTest extends TestCase
     public function test_businessScenario_memberTimeSequence(): void
     {
         $joinTime = new \DateTime('2024-01-15 10:00:00');
-        $createTime = new \DateTime('2024-01-15 10:00:01');
-        $updateTime = new \DateTime('2024-01-20 15:30:00');
+        $createTime = new \DateTimeImmutable('2024-01-15 10:00:01');
+        $updateTime = new \DateTimeImmutable('2024-01-20 15:30:00');
         
         $this->groupMember->setJoinTime($joinTime);
         $this->groupMember->setCreateTime($createTime);
@@ -527,7 +531,8 @@ class GroupMemberTest extends TestCase
         $this->assertTrue($joinTime <= $createTime); // 加入时间应该早于或等于创建时间
         $this->assertTrue($createTime <= $updateTime); // 创建时间应该早于或等于更新时间
         
-        $this->assertSame($joinTime, $this->groupMember->getJoinTime());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $this->groupMember->getJoinTime());
+        $this->assertEquals($joinTime->format('Y-m-d H:i:s'), $this->groupMember->getJoinTime()->format('Y-m-d H:i:s'));
         $this->assertSame($createTime, $this->groupMember->getCreateTime());
         $this->assertSame($updateTime, $this->groupMember->getUpdateTime());
     }

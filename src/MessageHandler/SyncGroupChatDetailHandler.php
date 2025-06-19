@@ -33,7 +33,7 @@ class SyncGroupChatDetailHandler
     public function __invoke(SyncGroupChatDetailMessage $message): void
     {
         $group = $this->groupChatRepository->findOneBy(['chatId' => $message->getChatId()]);
-        if (!$group) {
+        if (null === $group) {
             throw new UnrecoverableMessageHandlingException('数据库中找不到客户群信息');
         }
 
@@ -52,7 +52,7 @@ class SyncGroupChatDetailHandler
 
         // 拥有者
         $user = $this->userLoader->loadUserByUserIdAndCorp($response['group_chat']['owner'], $group->getCorp());
-        if ($user) {
+        if (null !== $user) {
             $group->setOwner($user);
         }
 
@@ -60,7 +60,7 @@ class SyncGroupChatDetailHandler
         $admins = [];
         foreach ($response['group_chat']['admin_list'] as $item) {
             $user = $this->userLoader->loadUserByUserIdAndCorp($item['userid'], $group->getCorp());
-            if (!$user) {
+            if (null === $user) {
                 continue;
             }
             $admins[] = $user;

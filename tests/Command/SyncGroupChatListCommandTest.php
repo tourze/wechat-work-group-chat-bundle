@@ -397,7 +397,7 @@ class SyncGroupChatListCommandTest extends TestCase
     public function testCommandMetadata(): void
     {
         // 验证命令名称
-        $this->assertEquals('wechat-work:SyncGroupChatListCommand', $this->command->getName());
+        $this->assertEquals('wechat-work:sync-group-chat-list', $this->command->getName());
         
         // 验证命令描述
         $this->assertEquals('同步客户群数据到本地', $this->command->getDescription());

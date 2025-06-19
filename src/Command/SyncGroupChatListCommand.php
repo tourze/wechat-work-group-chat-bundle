@@ -23,9 +23,10 @@ use WechatWorkGroupChatBundle\Request\GetGroupChatListRequest;
  * @see https://developer.work.weixin.qq.com/document/path/92120
  */
 #[AsCronTask('14 6 * * *')]
-#[AsCommand(name: 'wechat-work:SyncGroupChatListCommand', description: '同步客户群数据到本地')]
+#[AsCommand(name: self::NAME, description: '同步客户群数据到本地')]
 class SyncGroupChatListCommand extends Command
 {
+    public const NAME = 'wechat-work:sync-group-chat-list';
     public function __construct(
         private readonly AgentRepository $agentRepository,
         private readonly WorkService $workService,
@@ -49,7 +50,7 @@ class SyncGroupChatListCommand extends Command
 
             foreach ($userListResponse['follow_user'] as $userId) {
                 $user = $this->userLoader->loadUserByUserIdAndCorp($userId, $agent->getCorp());
-                if (!$user) {
+                if (null === $user) {
                     continue;
                 }
 
@@ -76,7 +77,7 @@ class SyncGroupChatListCommand extends Command
                         $group = $this->groupChatRepository->findOneBy([
                             'chatId' => $item['chat_id'],
                         ]);
-                        if (!$group) {
+                        if (null === $group) {
                             $group = new GroupChat();
                             $group->setChatId($item['chat_id']);
                         }

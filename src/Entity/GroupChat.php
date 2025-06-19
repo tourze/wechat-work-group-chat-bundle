@@ -17,7 +17,7 @@ use WechatWorkGroupChatBundle\Repository\GroupChatRepository;
 
 #[ORM\Entity(repositoryClass: GroupChatRepository::class)]
 #[ORM\Table(name: 'wechat_work_group_chat', options: ['comment' => '客户群'])]
-class GroupChat
+class GroupChat implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -33,13 +33,13 @@ class GroupChat
 
     #[IndexColumn]
     #[CreateTimeColumn]
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true, options: ['comment' => '创建时间'])]
-    private ?\DateTimeInterface $createTime = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['comment' => '创建时间'])]
+    private ?\DateTimeImmutable $createTime = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true, options: ['comment' => '群名称'])]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true, options: ['comment' => '群公告'])]
     private ?string $notice = null;
 
     #[ORM\ManyToOne]
@@ -94,12 +94,12 @@ class GroupChat
 
     public function setCreateTime(?\DateTimeInterface $createdAt): self
     {
-        $this->createTime = $createdAt;
+        $this->createTime = $createdAt instanceof \DateTimeImmutable ? $createdAt : ($createdAt !== null ? \DateTimeImmutable::createFromInterface($createdAt) : null);
 
         return $this;
     }
 
-    public function getCreateTime(): ?\DateTimeInterface
+    public function getCreateTime(): ?\DateTimeImmutable
     {
         return $this->createTime;
     }
@@ -216,5 +216,10 @@ class GroupChat
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name ?? $this->chatId ?? '';
     }
 }
