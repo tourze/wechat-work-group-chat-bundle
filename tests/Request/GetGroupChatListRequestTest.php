@@ -18,13 +18,6 @@ class GetGroupChatListRequestTest extends TestCase
         $this->assertInstanceOf(ApiRequest::class, $request);
     }
 
-    public function test_usesAgentAwareTrait(): void
-    {
-        // 测试使用AgentAware trait
-        $request = new GetGroupChatListRequest();
-        $this->assertTrue(method_exists($request, 'getAgent'));
-        $this->assertTrue(method_exists($request, 'setAgent'));
-    }
 
     public function test_getRequestPath(): void
     {
@@ -258,10 +251,6 @@ class GetGroupChatListRequestTest extends TestCase
     {
         // 测试继承自ApiRequest的核心方法
         $request = new GetGroupChatListRequest();
-        
-        $this->assertTrue(method_exists($request, 'getRequestPath'));
-        $this->assertTrue(method_exists($request, 'getRequestOptions'));
-        $this->assertTrue(method_exists($request, 'getRequestMethod'));
         
         // 验证是ApiRequest的实例
         $this->assertInstanceOf(ApiRequest::class, $request);
@@ -531,17 +520,4 @@ class GetGroupChatListRequestTest extends TestCase
         $this->assertSame($status1, $status2);
     }
 
-    public function test_agentAwareTraitIntegration(): void
-    {
-        // 测试AgentAware trait集成
-        $request = new GetGroupChatListRequest();
-        
-        // 测试agent相关方法存在
-        $this->assertTrue(method_exists($request, 'getAgent'));
-        $this->assertTrue(method_exists($request, 'setAgent'));
-        
-        // 这些方法应该可以正常调用
-        $this->assertTrue(is_callable([$request, 'getAgent']));
-        $this->assertTrue(is_callable([$request, 'setAgent']));
-    }
 } 

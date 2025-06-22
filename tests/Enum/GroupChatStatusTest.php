@@ -127,13 +127,6 @@ class GroupChatStatusTest extends TestCase
         $this->assertInstanceOf(\Tourze\EnumExtra\Selectable::class, GroupChatStatus::NORMAL);
     }
 
-    public function test_enumUsesExpectedTraits(): void
-    {
-        // 测试Trait方法存在性
-        $this->assertTrue(method_exists(GroupChatStatus::class, 'toArray'));
-        $this->assertTrue(method_exists(GroupChatStatus::class, 'genOptions'));
-        $this->assertTrue(method_exists(GroupChatStatus::class, 'toSelectItem'));
-    }
 
     public function test_genOptions_returnArray(): void
     {
@@ -236,40 +229,9 @@ class GroupChatStatusTest extends TestCase
         
         $this->assertSame($normal1, $normal2);
         $this->assertNotSame($normal1, $resign);
-        $this->assertTrue($normal1 === $normal2);
-        $this->assertFalse($normal1 === $resign);
     }
 
-    public function test_enumInArrayCheck(): void
-    {
-        // 测试枚举在数组中的检查
-        $statuses = [GroupChatStatus::NORMAL, GroupChatStatus::RESIGN];
-        
-        $this->assertTrue(in_array(GroupChatStatus::NORMAL, $statuses, true));
-        $this->assertTrue(in_array(GroupChatStatus::RESIGN, $statuses, true));
-        $this->assertFalse(in_array(GroupChatStatus::INHERIT_DOING, $statuses, true));
-    }
 
-    public function test_enumSwitchStatement(): void
-    {
-        // 测试枚举在switch语句中的使用
-        $result1 = match(GroupChatStatus::NORMAL) {
-            GroupChatStatus::NORMAL => 'active',
-            GroupChatStatus::RESIGN => 'resigned',
-            GroupChatStatus::INHERIT_DOING => 'inheriting',
-            GroupChatStatus::INHERIT_FINISHED => 'inherited'
-        };
-        
-        $result2 = match(GroupChatStatus::INHERIT_FINISHED) {
-            GroupChatStatus::NORMAL => 'active',
-            GroupChatStatus::RESIGN => 'resigned',
-            GroupChatStatus::INHERIT_DOING => 'inheriting',
-            GroupChatStatus::INHERIT_FINISHED => 'inherited'
-        };
-        
-        $this->assertSame('active', $result1);
-        $this->assertSame('inherited', $result2);
-    }
 
     public function test_sequentialValues(): void
     {

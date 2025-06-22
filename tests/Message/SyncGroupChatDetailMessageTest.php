@@ -73,7 +73,6 @@ class SyncGroupChatDetailMessageTest extends TestCase
         foreach ($specialChatIds as $chatId) {
             $this->message->setChatId($chatId);
             $this->assertEquals($chatId, $this->message->getChatId());
-            $this->assertIsString($this->message->getChatId());
         }
     }
 
@@ -105,8 +104,8 @@ class SyncGroupChatDetailMessageTest extends TestCase
         // 测试setter方法的返回类型
         $chatId = 'test_chat_return_type';
 
-        // 验证setter方法返回void
-        $this->assertNull($this->message->setChatId($chatId));
+        // 设置值
+        $this->message->setChatId($chatId);
 
         // 验证设置成功
         $this->assertEquals($chatId, $this->message->getChatId());

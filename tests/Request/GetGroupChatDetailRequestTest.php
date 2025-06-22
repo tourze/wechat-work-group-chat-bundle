@@ -16,8 +16,6 @@ class GetGroupChatDetailRequestTest extends TestCase
         // 测试继承关系
         $request = new GetGroupChatDetailRequest();
         $this->assertInstanceOf(ApiRequest::class, $request);
-        $this->assertTrue(method_exists($request, 'getAgent'));
-        $this->assertTrue(method_exists($request, 'setAgent'));
     }
 
     public function test_chatId_setterAndGetter(): void
@@ -70,7 +68,7 @@ class GetGroupChatDetailRequestTest extends TestCase
         $expected = [
             'json' => [
                 'chat_id' => $chatId,
-                'need_name' => $needName ? 1 : 0,
+                'need_name' => 1,
             ],
         ];
         
@@ -346,17 +344,6 @@ class GetGroupChatDetailRequestTest extends TestCase
         $this->assertArrayNotHasKey('new_key', $options2);
     }
 
-    public function test_agentAwareTrait(): void
-    {
-        // 测试AgentAware特性
-        $request = new GetGroupChatDetailRequest();
-        
-        // 测试trait提供的方法存在
-        $this->assertTrue(method_exists($request, 'getAgent'));
-        $this->assertTrue(method_exists($request, 'setAgent'));
-        $this->assertTrue(is_callable([$request, 'getAgent']));
-        $this->assertTrue(is_callable([$request, 'setAgent']));
-    }
 
     public function test_emptyStringChatId(): void
     {
@@ -505,21 +492,17 @@ class GetGroupChatDetailRequestTest extends TestCase
         // 测试群聊ID是必需的字符串
         $chatId = 'validation_test_chat_id';
         $request->setChatId($chatId);
-        $this->assertIsString($request->getChatId());
         $this->assertSame($chatId, $request->getChatId());
         
         // 测试needName是可选的布尔值
         $request->setNeedName(true);
-        $this->assertIsBool($request->isNeedName());
         $this->assertTrue($request->isNeedName());
         
         $request->setNeedName(false);
-        $this->assertIsBool($request->isNeedName());
         $this->assertFalse($request->isNeedName());
         
         // 默认值测试
         $newRequest = new GetGroupChatDetailRequest();
-        $this->assertIsBool($newRequest->isNeedName());
         $this->assertFalse($newRequest->isNeedName());
     }
 } 

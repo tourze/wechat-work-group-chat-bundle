@@ -6,9 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
 use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
-use Tourze\DoctrineTimestampBundle\Attribute\CreateTimeColumn;
+use Tourze\DoctrineTimestampBundle\Traits\CreateTimeAware;
 use Tourze\WechatWorkContracts\AgentInterface;
 use Tourze\WechatWorkContracts\CorpInterface;
 use Tourze\WechatWorkContracts\UserInterface;
@@ -19,6 +18,8 @@ use WechatWorkGroupChatBundle\Repository\GroupChatRepository;
 #[ORM\Table(name: 'wechat_work_group_chat', options: ['comment' => '客户群'])]
 class GroupChat implements \Stringable
 {
+    use CreateTimeAware;
+    
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(SnowflakeIdGenerator::class)]
@@ -31,10 +32,6 @@ class GroupChat implements \Stringable
     #[ORM\Column(nullable: true, enumType: GroupChatStatus::class, options: ['comment' => '跟进状态'])]
     private ?GroupChatStatus $status = null;
 
-    #[IndexColumn]
-    #[CreateTimeColumn]
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true, options: ['comment' => '创建时间'])]
-    private ?\DateTimeImmutable $createTime = null;
 
     #[ORM\Column(length: 255, nullable: true, options: ['comment' => '群名称'])]
     private ?string $name = null;
@@ -92,17 +89,6 @@ class GroupChat implements \Stringable
         return $this;
     }
 
-    public function setCreateTime(?\DateTimeImmutable $createdAt): self
-    {
-        $this->createTime = $createdAt instanceof \DateTimeImmutable ? $createdAt : ($createdAt ? \DateTimeImmutable::createFromInterface($createdAt) : null);
-
-        return $this;
-    }
-
-    public function getCreateTime(): ?\DateTimeImmutable
-    {
-        return $this->createTime;
-    }
 
     public function getName(): ?string
     {
