@@ -22,7 +22,7 @@ use WechatWorkGroupChatBundle\Request\GetGroupChatListRequest;
 /**
  * @see https://developer.work.weixin.qq.com/document/path/92120
  */
-#[AsCronTask('14 6 * * *')]
+#[AsCronTask(expression: '14 6 * * *')]
 #[AsCommand(name: self::NAME, description: '同步客户群数据到本地')]
 class SyncGroupChatListCommand extends Command
 {

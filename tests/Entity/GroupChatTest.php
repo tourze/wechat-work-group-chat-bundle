@@ -15,7 +15,7 @@ use WechatWorkGroupChatBundle\Enum\GroupChatStatus;
 
 /**
  * GroupChat 实体测试用例
- * 
+ *
  * 测试客户群实体的所有功能
  */
 class GroupChatTest extends TestCase
@@ -441,8 +441,8 @@ class GroupChatTest extends TestCase
     {
         /** @var GroupMember&MockObject $member */
         $member = $this->createMock(GroupMember::class);
-        /** @var GroupChat&MockObject $otherGroupChat */
-        $otherGroupChat = $this->createMock(GroupChat::class);
+        // 创建一个真实的 GroupChat 对象而不是 mock
+        $otherGroupChat = new GroupChat();
         
         $member->expects($this->once())->method('setGroupChat')->with($this->groupChat);
         

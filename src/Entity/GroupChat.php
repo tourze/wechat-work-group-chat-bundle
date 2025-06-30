@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
+use Tourze\DoctrineSnowflakeBundle\Traits\SnowflakeKeyAware;
 use Tourze\DoctrineTimestampBundle\Traits\CreateTimeAware;
 use Tourze\WechatWorkContracts\AgentInterface;
 use Tourze\WechatWorkContracts\CorpInterface;
@@ -19,12 +20,7 @@ use WechatWorkGroupChatBundle\Repository\GroupChatRepository;
 class GroupChat implements \Stringable
 {
     use CreateTimeAware;
-    
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(SnowflakeIdGenerator::class)]
-    #[ORM\Column(type: Types::BIGINT, nullable: false, options: ['comment' => 'ID'])]
-    private ?string $id = null;
+    use SnowflakeKeyAware;
 
     #[ORM\Column(length: 64, options: ['comment' => '客户群ID'])]
     private ?string $chatId = null;
@@ -58,11 +54,6 @@ class GroupChat implements \Stringable
     {
         $this->admins = new ArrayCollection();
         $this->members = new ArrayCollection();
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
     }
 
     public function getChatId(): ?string

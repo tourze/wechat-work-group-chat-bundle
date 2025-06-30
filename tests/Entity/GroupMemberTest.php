@@ -9,7 +9,7 @@ use WechatWorkGroupChatBundle\Entity\GroupMember;
 
 /**
  * GroupMember 实体测试用例
- * 
+ *
  * 测试客户群成员实体的所有功能
  */
 class GroupMemberTest extends TestCase
