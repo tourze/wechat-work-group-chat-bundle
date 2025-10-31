@@ -2,70 +2,60 @@
 
 namespace WechatWorkGroupChatBundle\Tests\Repository;
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Tourze\PHPUnitSymfonyKernelTest\AbstractRepositoryTestCase;
 use WechatWorkGroupChatBundle\Entity\GroupChat;
 use WechatWorkGroupChatBundle\Repository\GroupChatRepository;
 
-class GroupChatRepositoryTest extends TestCase
+/**
+ * @template-extends AbstractRepositoryTestCase<GroupChat>
+ * @internal
+ */
+#[CoversClass(GroupChatRepository::class)]
+#[RunTestsInSeparateProcesses]
+final class GroupChatRepositoryTest extends AbstractRepositoryTestCase
 {
-    public function testRepositoryClass(): void
+    protected function onSetUp(): void
     {
-        // 验证类继承关系
-        $reflection = new \ReflectionClass(GroupChatRepository::class);
-        $this->assertTrue($reflection->isSubclassOf(ServiceEntityRepository::class));
     }
 
-    public function testEntityClass(): void
+    protected function createNewEntity(): object
     {
-        // 验证仓储管理的实体类
-        $reflection = new \ReflectionClass(GroupChatRepository::class);
-        $constructor = $reflection->getConstructor();
-        $parameters = $constructor->getParameters();
-        
-        // 检查构造函数参数
-        $this->assertCount(1, $parameters);
-        $this->assertEquals('registry', $parameters[0]->getName());
+        $groupChat = new GroupChat();
+        $groupChat->setChatId('test_chat_' . uniqid());
+
+        return $groupChat;
     }
 
-    public function testRepositoryMethods(): void
+    protected function getRepository(): GroupChatRepository
     {
-        // 验证继承的方法存在
-        $methods = get_class_methods(GroupChatRepository::class);
-        
-        $this->assertContains('find', $methods);
-        $this->assertContains('findOneBy', $methods);
-        $this->assertContains('findAll', $methods);
-        $this->assertContains('findBy', $methods);
+        return self::getService(GroupChatRepository::class);
     }
 
-    public function testClassDocBlock(): void
+    public function testSaveAndFindGroupChat(): void
     {
-        $reflection = new \ReflectionClass(GroupChatRepository::class);
-        $docComment = $reflection->getDocComment();
-        
-        // 验证文档块包含正确的方法声明
-        $this->assertStringContainsString('@method GroupChat|null find', $docComment);
-        $this->assertStringContainsString('@method GroupChat|null findOneBy', $docComment);
-        $this->assertStringContainsString('@method GroupChat[]    findAll', $docComment);
-        $this->assertStringContainsString('@method GroupChat[]    findBy', $docComment);
+        $repository = $this->getRepository();
+        $groupChat = new GroupChat();
+        $groupChat->setChatId('custom_save_test_' . uniqid());
+
+        $repository->save($groupChat);
+
+        $found = $repository->findOneBy(['chatId' => $groupChat->getChatId()]);
+        $this->assertNotNull($found);
+        $this->assertEquals($groupChat->getChatId(), $found->getChatId());
     }
 
-    public function testConstructorLogic(): void
+    public function testRemoveGroupChat(): void
     {
-        $reflection = new \ReflectionClass(GroupChatRepository::class);
-        $constructor = $reflection->getConstructor();
-        
-        // 获取构造函数的代码
-        $fileName = $reflection->getFileName();
-        $startLine = $constructor->getStartLine();
-        $endLine = $constructor->getEndLine();
-        
-        $source = file($fileName);
-        $constructorCode = implode('', array_slice($source, $startLine - 1, $endLine - $startLine + 1));
-        
-        // 验证构造函数调用了父类构造函数并传递了正确的实体类
-        $this->assertStringContainsString('parent::__construct', $constructorCode);
-        $this->assertStringContainsString('GroupChat::class', $constructorCode);
+        $repository = $this->getRepository();
+        $groupChat = new GroupChat();
+        $groupChat->setChatId('custom_remove_test_' . uniqid());
+        $repository->save($groupChat);
+
+        $repository->remove($groupChat);
+
+        $found = $repository->findOneBy(['chatId' => $groupChat->getChatId()]);
+        $this->assertNull($found);
     }
 }

@@ -2,70 +2,84 @@
 
 namespace WechatWorkGroupChatBundle\Tests\Repository;
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Tourze\PHPUnitSymfonyKernelTest\AbstractRepositoryTestCase;
+use WechatWorkGroupChatBundle\Entity\GroupChat;
 use WechatWorkGroupChatBundle\Entity\GroupMember;
 use WechatWorkGroupChatBundle\Repository\GroupMemberRepository;
 
-class GroupMemberRepositoryTest extends TestCase
+/**
+ * @template-extends AbstractRepositoryTestCase<GroupMember>
+ * @internal
+ */
+#[CoversClass(GroupMemberRepository::class)]
+#[RunTestsInSeparateProcesses]
+final class GroupMemberRepositoryTest extends AbstractRepositoryTestCase
 {
-    public function testRepositoryClass(): void
+    protected function onSetUp(): void
     {
-        // 验证类继承关系
-        $reflection = new \ReflectionClass(GroupMemberRepository::class);
-        $this->assertTrue($reflection->isSubclassOf(ServiceEntityRepository::class));
     }
 
-    public function testEntityClass(): void
+    protected function createNewEntity(): object
     {
-        // 验证仓储管理的实体类
-        $reflection = new \ReflectionClass(GroupMemberRepository::class);
-        $constructor = $reflection->getConstructor();
-        $parameters = $constructor->getParameters();
-        
-        // 检查构造函数参数
-        $this->assertCount(1, $parameters);
-        $this->assertEquals('registry', $parameters[0]->getName());
+        $groupChat = new GroupChat();
+        $groupChat->setChatId('test_group_' . uniqid());
+        $em = self::getEntityManager();
+        $em->persist($groupChat);
+        $em->flush();
+
+        $groupMember = new GroupMember();
+        $groupMember->setUserId('test_user_' . uniqid());
+        $groupMember->setGroupChat($groupChat);
+
+        return $groupMember;
     }
 
-    public function testRepositoryMethods(): void
+    protected function getRepository(): GroupMemberRepository
     {
-        // 验证继承的方法存在
-        $methods = get_class_methods(GroupMemberRepository::class);
-        
-        $this->assertContains('find', $methods);
-        $this->assertContains('findOneBy', $methods);
-        $this->assertContains('findAll', $methods);
-        $this->assertContains('findBy', $methods);
+        return self::getService(GroupMemberRepository::class);
     }
 
-    public function testClassDocBlock(): void
+    public function testSaveAndFindGroupMember(): void
     {
-        $reflection = new \ReflectionClass(GroupMemberRepository::class);
-        $docComment = $reflection->getDocComment();
-        
-        // 验证文档块包含正确的方法声明
-        $this->assertStringContainsString('@method GroupMember|null find', $docComment);
-        $this->assertStringContainsString('@method GroupMember|null findOneBy', $docComment);
-        $this->assertStringContainsString('@method GroupMember[]    findAll', $docComment);
-        $this->assertStringContainsString('@method GroupMember[]    findBy', $docComment);
+        $repository = $this->getRepository();
+
+        $groupChat = new GroupChat();
+        $groupChat->setChatId('custom_save_group_' . uniqid());
+        $em = self::getEntityManager();
+        $em->persist($groupChat);
+        $em->flush();
+
+        $groupMember = new GroupMember();
+        $groupMember->setUserId('custom_save_test_user_' . uniqid());
+        $groupMember->setGroupChat($groupChat);
+
+        $repository->save($groupMember);
+
+        $found = $repository->findOneBy(['userId' => $groupMember->getUserId()]);
+        $this->assertNotNull($found);
+        $this->assertEquals($groupMember->getUserId(), $found->getUserId());
     }
 
-    public function testConstructorLogic(): void
+    public function testRemoveGroupMember(): void
     {
-        $reflection = new \ReflectionClass(GroupMemberRepository::class);
-        $constructor = $reflection->getConstructor();
-        
-        // 获取构造函数的代码
-        $fileName = $reflection->getFileName();
-        $startLine = $constructor->getStartLine();
-        $endLine = $constructor->getEndLine();
-        
-        $source = file($fileName);
-        $constructorCode = implode('', array_slice($source, $startLine - 1, $endLine - $startLine + 1));
-        
-        // 验证构造函数调用了父类构造函数并传递了正确的实体类
-        $this->assertStringContainsString('parent::__construct', $constructorCode);
-        $this->assertStringContainsString('GroupMember::class', $constructorCode);
+        $repository = $this->getRepository();
+
+        $groupChat = new GroupChat();
+        $groupChat->setChatId('custom_remove_group_' . uniqid());
+        $em = self::getEntityManager();
+        $em->persist($groupChat);
+        $em->flush();
+
+        $groupMember = new GroupMember();
+        $groupMember->setUserId('custom_remove_test_user_' . uniqid());
+        $groupMember->setGroupChat($groupChat);
+        $repository->save($groupMember);
+
+        $repository->remove($groupMember);
+
+        $found = $repository->findOneBy(['userId' => $groupMember->getUserId()]);
+        $this->assertNull($found);
     }
 }

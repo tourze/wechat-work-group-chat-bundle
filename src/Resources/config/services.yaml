@@ -6,7 +6,12 @@ services:
 
   WechatWorkGroupChatBundle\Command\:
     resource: '../../Command/'
+  WechatWorkGroupChatBundle\Controller\:
+    resource: '../../Controller/'
   WechatWorkGroupChatBundle\MessageHandler\:
     resource: '../../MessageHandler/'
   WechatWorkGroupChatBundle\Repository\:
     resource: '../../Repository/'
+  WechatWorkGroupChatBundle\Service\:
+    resource: '../../Service/'
+

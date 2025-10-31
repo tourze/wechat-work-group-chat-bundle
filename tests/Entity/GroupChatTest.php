@@ -4,8 +4,9 @@ namespace WechatWorkGroupChatBundle\Tests\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Tourze\PHPUnitDoctrineEntity\AbstractEntityTestCase;
 use Tourze\WechatWorkContracts\AgentInterface;
 use Tourze\WechatWorkContracts\CorpInterface;
 use Tourze\WechatWorkContracts\UserInterface;
@@ -17,20 +18,35 @@ use WechatWorkGroupChatBundle\Enum\GroupChatStatus;
  * GroupChat 实体测试用例
  *
  * 测试客户群实体的所有功能
+ *
+ * @internal
  */
-class GroupChatTest extends TestCase
+#[CoversClass(GroupChat::class)]
+final class GroupChatTest extends AbstractEntityTestCase
 {
-    private GroupChat $groupChat;
-
-    protected function setUp(): void
+    protected function createEntity(): object
     {
-        $this->groupChat = new GroupChat();
+        return new GroupChat();
     }
 
-    public function test_constructor_setsDefaultValues(): void
+    /** @return iterable<string, array{string, mixed}> */
+    public static function propertiesProvider(): iterable
+    {
+        return [
+            'chatId' => ['chatId', 'test_chat_id'],
+            'status' => ['status', null],
+            'name' => ['name', '测试群名'],
+            'notice' => ['notice', '测试公告'],
+            'agent' => ['agent', null],
+            'corp' => ['corp', null],
+            'owner' => ['owner', null],
+        ];
+    }
+
+    public function testConstructorSetsDefaultValues(): void
     {
         $groupChat = new GroupChat();
-        
+
         $this->assertNull($groupChat->getId());
         $this->assertNull($groupChat->getChatId());
         $this->assertNull($groupChat->getStatus());
@@ -48,525 +64,536 @@ class GroupChatTest extends TestCase
         $this->assertTrue($groupChat->getMembers()->isEmpty());
     }
 
-    public function test_setChatId_withValidId_setsIdCorrectly(): void
+    public function testSetChatIdWithValidIdSetsIdCorrectly(): void
     {
+        $groupChat = new GroupChat();
         $chatId = 'wrkSFMzxKUwG6QRf3nM5HcRcFwlL4d6Q';
-        
-        $result = $this->groupChat->setChatId($chatId);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame($chatId, $this->groupChat->getChatId());
+
+        $groupChat->setChatId($chatId);
+
+        $this->assertSame($chatId, $groupChat->getChatId());
     }
 
-    public function test_setChatId_withEmptyString_setsEmptyString(): void
+    public function testSetChatIdWithEmptyStringSetsEmptyString(): void
     {
-        $result = $this->groupChat->setChatId('');
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame('', $this->groupChat->getChatId());
+        $groupChat = new GroupChat();
+        $groupChat->setChatId('');
+
+        $this->assertSame('', $groupChat->getChatId());
     }
 
-    public function test_setChatId_withLongString_setsLongString(): void
+    public function testSetChatIdWithLongStringSetsLongString(): void
     {
+        $groupChat = new GroupChat();
         $longChatId = str_repeat('a', 64); // 最大长度
-        
-        $result = $this->groupChat->setChatId($longChatId);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame($longChatId, $this->groupChat->getChatId());
+
+        $groupChat->setChatId($longChatId);
+
+        $this->assertSame($longChatId, $groupChat->getChatId());
     }
 
-    public function test_setStatus_withNormalStatus_setsStatusCorrectly(): void
+    public function testSetStatusWithNormalStatusSetsStatusCorrectly(): void
     {
+        $groupChat = new GroupChat();
         $status = GroupChatStatus::NORMAL;
-        
-        $result = $this->groupChat->setStatus($status);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame($status, $this->groupChat->getStatus());
+
+        $groupChat->setStatus($status);
+
+        $this->assertSame($status, $groupChat->getStatus());
     }
 
-    public function test_setStatus_withResignStatus_setsStatusCorrectly(): void
+    public function testSetStatusWithResignStatusSetsStatusCorrectly(): void
     {
+        $groupChat = new GroupChat();
         $status = GroupChatStatus::RESIGN;
-        
-        $result = $this->groupChat->setStatus($status);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame($status, $this->groupChat->getStatus());
+
+        $groupChat->setStatus($status);
+
+        $this->assertSame($status, $groupChat->getStatus());
     }
 
-    public function test_setStatus_withInheritDoingStatus_setsStatusCorrectly(): void
+    public function testSetStatusWithInheritDoingStatusSetsStatusCorrectly(): void
     {
+        $groupChat = new GroupChat();
         $status = GroupChatStatus::INHERIT_DOING;
-        
-        $result = $this->groupChat->setStatus($status);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame($status, $this->groupChat->getStatus());
+
+        $groupChat->setStatus($status);
+
+        $this->assertSame($status, $groupChat->getStatus());
     }
 
-    public function test_setStatus_withInheritFinishedStatus_setsStatusCorrectly(): void
+    public function testSetStatusWithInheritFinishedStatusSetsStatusCorrectly(): void
     {
+        $groupChat = new GroupChat();
         $status = GroupChatStatus::INHERIT_FINISHED;
-        
-        $result = $this->groupChat->setStatus($status);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame($status, $this->groupChat->getStatus());
+
+        $groupChat->setStatus($status);
+
+        $this->assertSame($status, $groupChat->getStatus());
     }
 
-    public function test_setStatus_withNull_setsNull(): void
+    public function testSetStatusWithNullSetsNull(): void
     {
-        $this->groupChat->setStatus(GroupChatStatus::NORMAL);
-        
-        $result = $this->groupChat->setStatus(null);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertNull($this->groupChat->getStatus());
+        $groupChat = new GroupChat();
+        $groupChat->setStatus(GroupChatStatus::NORMAL);
+
+        $groupChat->setStatus(null);
+
+        $this->assertNull($groupChat->getStatus());
     }
 
-    public function test_setCreateTime_withValidDateTime_setsTimeCorrectly(): void
+    public function testSetCreateTimeWithValidDateTimeSetsTimeCorrectly(): void
     {
+        $groupChat = new GroupChat();
         $createTime = new \DateTimeImmutable('2024-01-15 10:30:00');
-        
-        $result = $this->groupChat->setCreateTime($createTime);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertInstanceOf(\DateTimeImmutable::class, $this->groupChat->getCreateTime());
-        $this->assertEquals($createTime->format('Y-m-d H:i:s'), $this->groupChat->getCreateTime()->format('Y-m-d H:i:s'));
+
+        $groupChat->setCreateTime($createTime);
+        $this->assertInstanceOf(\DateTimeImmutable::class, $groupChat->getCreateTime());
+        $this->assertEquals($createTime->format('Y-m-d H:i:s'), $groupChat->getCreateTime()->format('Y-m-d H:i:s'));
     }
 
-    public function test_setCreateTime_withNull_setsNull(): void
+    public function testSetCreateTimeWithNullSetsNull(): void
     {
-        $this->groupChat->setCreateTime(new \DateTimeImmutable());
-        
-        $result = $this->groupChat->setCreateTime(null);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertNull($this->groupChat->getCreateTime());
+        $groupChat = new GroupChat();
+        $groupChat->setCreateTime(new \DateTimeImmutable());
+
+        $groupChat->setCreateTime(null);
+        $this->assertNull($groupChat->getCreateTime());
     }
 
-    public function test_setName_withValidName_setsNameCorrectly(): void
+    public function testSetNameWithValidNameSetsNameCorrectly(): void
     {
+        $groupChat = new GroupChat();
         $name = '产品讨论群';
-        
-        $result = $this->groupChat->setName($name);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame($name, $this->groupChat->getName());
+
+        $groupChat->setName($name);
+        $this->assertSame($name, $groupChat->getName());
     }
 
-    public function test_setName_withNull_setsNull(): void
+    public function testSetNameWithNullSetsNull(): void
     {
-        $this->groupChat->setName('old name');
-        
-        $result = $this->groupChat->setName(null);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertNull($this->groupChat->getName());
+        $groupChat = new GroupChat();
+        $groupChat->setName('old name');
+
+        $groupChat->setName(null);
+        $this->assertNull($groupChat->getName());
     }
 
-    public function test_setName_withLongName_setsLongName(): void
+    public function testSetNameWithLongNameSetsLongName(): void
     {
+        $groupChat = new GroupChat();
         $longName = str_repeat('群聊名称', 30); // 长名称
-        
-        $result = $this->groupChat->setName($longName);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame($longName, $this->groupChat->getName());
+
+        $groupChat->setName($longName);
+        $this->assertSame($longName, $groupChat->getName());
     }
 
-    public function test_setNotice_withValidNotice_setsNoticeCorrectly(): void
+    public function testSetNoticeWithValidNoticeSetsNoticeCorrectly(): void
     {
+        $groupChat = new GroupChat();
         $notice = '欢迎大家加入产品讨论群，请文明交流！';
-        
-        $result = $this->groupChat->setNotice($notice);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame($notice, $this->groupChat->getNotice());
+
+        $groupChat->setNotice($notice);
+        $this->assertSame($notice, $groupChat->getNotice());
     }
 
-    public function test_setNotice_withNull_setsNull(): void
+    public function testSetNoticeWithNullSetsNull(): void
     {
-        $this->groupChat->setNotice('old notice');
-        
-        $result = $this->groupChat->setNotice(null);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertNull($this->groupChat->getNotice());
+        $groupChat = new GroupChat();
+        $groupChat->setNotice('old notice');
+
+        $groupChat->setNotice(null);
+        $this->assertNull($groupChat->getNotice());
     }
 
-    public function test_setNotice_withLongNotice_setsLongNotice(): void
+    public function testSetNoticeWithLongNoticeSetsLongNotice(): void
     {
+        $groupChat = new GroupChat();
         $longNotice = str_repeat('这是一个很长的群公告。', 100); // 长公告
-        
-        $result = $this->groupChat->setNotice($longNotice);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame($longNotice, $this->groupChat->getNotice());
+
+        $groupChat->setNotice($longNotice);
+        $this->assertSame($longNotice, $groupChat->getNotice());
     }
 
-    public function test_setAgent_withValidAgent_setsAgentCorrectly(): void
+    public function testSetAgentWithValidAgentSetsAgentCorrectly(): void
     {
-        /** @var AgentInterface&MockObject $agent */
+        $groupChat = new GroupChat();
         $agent = $this->createMock(AgentInterface::class);
-        
-        $result = $this->groupChat->setAgent($agent);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame($agent, $this->groupChat->getAgent());
+
+        $groupChat->setAgent($agent);
+        $this->assertSame($agent, $groupChat->getAgent());
     }
 
-    public function test_setAgent_withNull_setsNull(): void
+    public function testSetAgentWithNullSetsNull(): void
     {
-        /** @var AgentInterface&MockObject $agent */
+        $groupChat = new GroupChat();
         $agent = $this->createMock(AgentInterface::class);
-        $this->groupChat->setAgent($agent);
-        
-        $result = $this->groupChat->setAgent(null);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertNull($this->groupChat->getAgent());
+        $groupChat->setAgent($agent);
+
+        $groupChat->setAgent(null);
+        $this->assertNull($groupChat->getAgent());
     }
 
-    public function test_setCorp_withValidCorp_setsCorpCorrectly(): void
+    public function testSetCorpWithValidCorpSetsCorpCorrectly(): void
     {
-        /** @var CorpInterface&MockObject $corp */
+        $groupChat = new GroupChat();
         $corp = $this->createMock(CorpInterface::class);
-        
-        $result = $this->groupChat->setCorp($corp);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame($corp, $this->groupChat->getCorp());
+
+        $groupChat->setCorp($corp);
+        $this->assertSame($corp, $groupChat->getCorp());
     }
 
-    public function test_setCorp_withNull_setsNull(): void
+    public function testSetCorpWithNullSetsNull(): void
     {
-        /** @var CorpInterface&MockObject $corp */
+        $groupChat = new GroupChat();
         $corp = $this->createMock(CorpInterface::class);
-        $this->groupChat->setCorp($corp);
-        
-        $result = $this->groupChat->setCorp(null);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertNull($this->groupChat->getCorp());
+        $groupChat->setCorp($corp);
+
+        $groupChat->setCorp(null);
+        $this->assertNull($groupChat->getCorp());
     }
 
-    public function test_setOwner_withValidOwner_setsOwnerCorrectly(): void
+    public function testSetOwnerWithValidOwnerSetsOwnerCorrectly(): void
     {
-        /** @var UserInterface&MockObject $owner */
+        $groupChat = new GroupChat();
         $owner = $this->createMock(UserInterface::class);
-        
-        $result = $this->groupChat->setOwner($owner);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame($owner, $this->groupChat->getOwner());
+
+        $groupChat->setOwner($owner);
+        $this->assertSame($owner, $groupChat->getOwner());
     }
 
-    public function test_setOwner_withNull_setsNull(): void
+    public function testSetOwnerWithNullSetsNull(): void
     {
-        /** @var UserInterface&MockObject $owner */
+        $groupChat = new GroupChat();
         $owner = $this->createMock(UserInterface::class);
-        $this->groupChat->setOwner($owner);
-        
-        $result = $this->groupChat->setOwner(null);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertNull($this->groupChat->getOwner());
+        $groupChat->setOwner($owner);
+
+        $groupChat->setOwner(null);
+        $this->assertNull($groupChat->getOwner());
     }
 
     /**
      * 测试管理员Collection操作
      */
-    public function test_addAdmin_withNewAdmin_addsAdminToCollection(): void
+    public function testAddAdminWithNewAdminAddsAdminToCollection(): void
     {
-        /** @var UserInterface&MockObject $admin */
+        $groupChat = new GroupChat();
         $admin = $this->createMock(UserInterface::class);
-        
-        $result = $this->groupChat->addAdmin($admin);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertTrue($this->groupChat->getAdmins()->contains($admin));
-        $this->assertCount(1, $this->groupChat->getAdmins());
+
+        $groupChat->addAdmin($admin);
+        $this->assertTrue($groupChat->getAdmins()->contains($admin));
+        $this->assertCount(1, $groupChat->getAdmins());
     }
 
-    public function test_addAdmin_withExistingAdmin_doesNotAddDuplicate(): void
+    public function testAddAdminWithExistingAdminDoesNotAddDuplicate(): void
     {
-        /** @var UserInterface&MockObject $admin */
+        $groupChat = new GroupChat();
         $admin = $this->createMock(UserInterface::class);
-        
+
         // 添加第一次
-        $this->groupChat->addAdmin($admin);
-        $firstCount = $this->groupChat->getAdmins()->count();
-        
+        $groupChat->addAdmin($admin);
+        $firstCount = $groupChat->getAdmins()->count();
+
         // 尝试再次添加相同管理员
-        $result = $this->groupChat->addAdmin($admin);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertCount($firstCount, $this->groupChat->getAdmins());
+        $groupChat->addAdmin($admin);
+        $this->assertCount($firstCount, $groupChat->getAdmins());
     }
 
-    public function test_addAdmin_withMultipleAdmins_addsAllAdmins(): void
+    public function testAddAdminWithMultipleAdminsAddsAllAdmins(): void
     {
-        /** @var UserInterface&MockObject $admin1 */
+        $groupChat = new GroupChat();
         $admin1 = $this->createMock(UserInterface::class);
-        /** @var UserInterface&MockObject $admin2 */
         $admin2 = $this->createMock(UserInterface::class);
-        /** @var UserInterface&MockObject $admin3 */
         $admin3 = $this->createMock(UserInterface::class);
-        
-        $this->groupChat->addAdmin($admin1);
-        $this->groupChat->addAdmin($admin2);
-        $this->groupChat->addAdmin($admin3);
-        
-        $this->assertCount(3, $this->groupChat->getAdmins());
-        $this->assertTrue($this->groupChat->getAdmins()->contains($admin1));
-        $this->assertTrue($this->groupChat->getAdmins()->contains($admin2));
-        $this->assertTrue($this->groupChat->getAdmins()->contains($admin3));
+
+        $groupChat->addAdmin($admin1);
+        $groupChat->addAdmin($admin2);
+        $groupChat->addAdmin($admin3);
+
+        $this->assertCount(3, $groupChat->getAdmins());
+        $this->assertTrue($groupChat->getAdmins()->contains($admin1));
+        $this->assertTrue($groupChat->getAdmins()->contains($admin2));
+        $this->assertTrue($groupChat->getAdmins()->contains($admin3));
     }
 
-    public function test_removeAdmin_withExistingAdmin_removesAdminFromCollection(): void
+    public function testRemoveAdminWithExistingAdminRemovesAdminFromCollection(): void
     {
-        /** @var UserInterface&MockObject $admin */
+        $groupChat = new GroupChat();
         $admin = $this->createMock(UserInterface::class);
-        
+
         // 先添加管理员
-        $this->groupChat->addAdmin($admin);
-        $this->assertCount(1, $this->groupChat->getAdmins());
-        
+        $groupChat->addAdmin($admin);
+        $this->assertCount(1, $groupChat->getAdmins());
+
         // 移除管理员
-        $result = $this->groupChat->removeAdmin($admin);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertFalse($this->groupChat->getAdmins()->contains($admin));
-        $this->assertCount(0, $this->groupChat->getAdmins());
+        $groupChat->removeAdmin($admin);
+        $this->assertFalse($groupChat->getAdmins()->contains($admin));
+        $this->assertCount(0, $groupChat->getAdmins());
     }
 
-    public function test_removeAdmin_withNonExistingAdmin_doesNothing(): void
+    public function testRemoveAdminWithNonExistingAdminDoesNothing(): void
     {
-        /** @var UserInterface&MockObject $admin */
+        $groupChat = new GroupChat();
         $admin = $this->createMock(UserInterface::class);
-        
-        $result = $this->groupChat->removeAdmin($admin);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertCount(0, $this->groupChat->getAdmins());
+
+        $groupChat->removeAdmin($admin);
+        $this->assertCount(0, $groupChat->getAdmins());
     }
 
     /**
      * 测试成员Collection操作
      */
-    public function test_addMember_withNewMember_addsMemberToCollection(): void
+    public function testAddMemberWithNewMemberAddsMemberToCollection(): void
     {
-        /** @var GroupMember&MockObject $member */
+        /**
+         * 使用具体类 GroupMember 创建 Mock 对象的原因：
+         * 1. GroupMember 是一个实体类，需要测试其与 GroupChat 的双向关联关系
+         * 2. 该实体类包含复杂的业务逻辑（如 setGroupChat 方法），需要验证调用行为
+         * 3. 没有合适的接口可以替代，因为需要测试具体的实体关系映射
+         * 4. 这种使用方式是测试实体间关联关系的标准做法
+         */
+        $groupChat = new GroupChat();
         $member = $this->createMock(GroupMember::class);
         $member->expects($this->once())
-               ->method('setGroupChat')
-               ->with($this->groupChat);
-        
-        $result = $this->groupChat->addMember($member);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertTrue($this->groupChat->getMembers()->contains($member));
-        $this->assertCount(1, $this->groupChat->getMembers());
+            ->method('setGroupChat')
+            ->with($groupChat)
+        ;
+
+        $groupChat->addMember($member);
+        $this->assertTrue($groupChat->getMembers()->contains($member));
+        $this->assertCount(1, $groupChat->getMembers());
     }
 
-    public function test_addMember_withExistingMember_doesNotAddDuplicate(): void
+    public function testAddMemberWithExistingMemberDoesNotAddDuplicate(): void
     {
-        /** @var GroupMember&MockObject $member */
+        /**
+         * 使用具体类 GroupMember 创建 Mock 对象的原因：
+         * 1. 需要测试集合去重逻辑，验证相同成员不会被重复添加
+         * 2. 需要验证 setGroupChat 方法的调用次数和参数
+         * 3. 实体类的双向关联逻辑需要通过具体类来测试
+         * 4. 没有接口层可以抽象这些具体的实体行为
+         */
+        $groupChat = new GroupChat();
         $member = $this->createMock(GroupMember::class);
         $member->expects($this->once()) // 只调用一次
-               ->method('setGroupChat');
-        
+            ->method('setGroupChat')
+        ;
+
         // 添加第一次
-        $this->groupChat->addMember($member);
-        $firstCount = $this->groupChat->getMembers()->count();
-        
+        $groupChat->addMember($member);
+        $firstCount = $groupChat->getMembers()->count();
+
         // 尝试再次添加相同成员
-        $result = $this->groupChat->addMember($member);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertCount($firstCount, $this->groupChat->getMembers());
+        $groupChat->addMember($member);
+        $this->assertCount($firstCount, $groupChat->getMembers());
     }
 
-    public function test_removeMember_withExistingMember_removesMemberFromCollection(): void
+    public function testRemoveMemberWithExistingMemberRemovesMemberFromCollection(): void
     {
-        /** @var GroupMember&MockObject $member */
+        /**
+         * 使用具体类 GroupMember 创建 Mock 对象的原因：
+         * 1. 测试成员移除时的双向关联解除逻辑
+         * 2. 需要验证 setGroupChat(null) 被正确调用以解除关联
+         * 3. 需要验证 getGroupChat() 方法返回正确的关联对象
+         * 4. 实体间的复杂关联逻辑无法通过接口抽象
+         */
+        $groupChat = new GroupChat();
         $member = $this->createMock(GroupMember::class);
-        
+
         // 设置期望：setGroupChat被调用两次，第一次传入groupChat，第二次传入null
         $member->expects($this->exactly(2))
-               ->method('setGroupChat')
-               ->with($this->callback(function ($arg) {
-                   static $callCount = 0;
-                   $callCount++;
-                   if ($callCount === 1) {
-                       return $arg === $this->groupChat;
-                   } else {
-                       return $arg === null;
-                   }
-               }));
-        
+            ->method('setGroupChat')
+            ->with(self::callback(function ($arg) use ($groupChat) {
+                static $callCount = 0;
+                /** @var int $callCount */
+                ++$callCount;
+                if (1 === $callCount) {
+                    return $arg === $groupChat;
+                }
+
+                return null === $arg;
+            }))
+        ;
+
         $member->expects($this->once())
-               ->method('getGroupChat')
-               ->willReturn($this->groupChat);
-        
+            ->method('getGroupChat')
+            ->willReturn($groupChat)
+        ;
+
         // 先添加成员
-        $this->groupChat->addMember($member);
-        $this->assertCount(1, $this->groupChat->getMembers());
-        
+        $groupChat->addMember($member);
+        $this->assertCount(1, $groupChat->getMembers());
+
         // 移除成员
-        $result = $this->groupChat->removeMember($member);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertFalse($this->groupChat->getMembers()->contains($member));
-        $this->assertCount(0, $this->groupChat->getMembers());
+        $groupChat->removeMember($member);
+        $this->assertFalse($groupChat->getMembers()->contains($member));
+        $this->assertCount(0, $groupChat->getMembers());
     }
 
-    public function test_removeMember_withNonExistingMember_doesNothing(): void
+    public function testRemoveMemberWithNonExistingMemberDoesNothing(): void
     {
-        /** @var GroupMember&MockObject $member */
+        /**
+         * 使用具体类 GroupMember 创建 Mock 对象的原因：
+         * 1. 测试边界条件：移除不存在的成员时应该不执行任何操作
+         * 2. 需要验证 setGroupChat 方法不会被调用
+         * 3. 确保集合操作的安全性和幂等性
+         * 4. 实体类的具体行为需要通过具体类来验证
+         */
+        $groupChat = new GroupChat();
         $member = $this->createMock(GroupMember::class);
         $member->expects($this->never())->method('setGroupChat');
         $member->expects($this->never())->method('getGroupChat');
-        
-        $result = $this->groupChat->removeMember($member);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertCount(0, $this->groupChat->getMembers());
+
+        $groupChat->removeMember($member);
+        $this->assertCount(0, $groupChat->getMembers());
     }
 
-    public function test_removeMember_whenMemberGroupChatDiffers_removesButDoesNotSetNull(): void
+    public function testRemoveMemberWhenMemberGroupChatDiffersRemovesButDoesNotSetNull(): void
     {
-        /** @var GroupMember&MockObject $member */
+        /**
+         * 使用具体类 GroupMember 创建 Mock 对象的原因：
+         * 1. 测试复杂的边界情况：成员的群聊关联已被修改的情况
+         * 2. 需要验证 getGroupChat() 返回的对象与当前群聊不同时的行为
+         * 3. 确保只移除集合中的引用，不修改成员的关联对象
+         * 4. 这种业务逻辑只能通过实体类来正确模拟
+         */
+        $groupChat = new GroupChat();
         $member = $this->createMock(GroupMember::class);
         // 创建一个真实的 GroupChat 对象而不是 mock
         $otherGroupChat = new GroupChat();
-        
-        $member->expects($this->once())->method('setGroupChat')->with($this->groupChat);
-        
+
+        $member->expects($this->once())->method('setGroupChat')->with($groupChat);
+
         // 添加成员
-        $this->groupChat->addMember($member);
-        
+        $groupChat->addMember($member);
+
         // 模拟成员的群聊已经被改变
         $member->expects($this->once())->method('getGroupChat')->willReturn($otherGroupChat);
-        
-        $result = $this->groupChat->removeMember($member);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertFalse($this->groupChat->getMembers()->contains($member));
+
+        $groupChat->removeMember($member);
+        $this->assertFalse($groupChat->getMembers()->contains($member));
     }
 
     /**
      * 测试链式调用
      */
-    public function test_chainedSetters_returnSameInstance(): void
+    public function testChainedSettersReturnSameInstance(): void
     {
-        /** @var AgentInterface&MockObject $agent */
+        $groupChat = new GroupChat();
         $agent = $this->createMock(AgentInterface::class);
-        /** @var CorpInterface&MockObject $corp */
         $corp = $this->createMock(CorpInterface::class);
-        /** @var UserInterface&MockObject $owner */
         $owner = $this->createMock(UserInterface::class);
-        
+
         $createTime = new \DateTimeImmutable('2024-01-15 10:00:00');
-        
-        $result = $this->groupChat
-            ->setChatId('chain_test_chat_id')
-            ->setStatus(GroupChatStatus::NORMAL)
-            ->setName('链式调用测试群')
-            ->setNotice('这是链式调用测试群公告')
-            ->setAgent($agent)
-            ->setCorp($corp)
-            ->setOwner($owner)
-            ->setCreateTime($createTime);
-        
-        $this->assertSame($this->groupChat, $result);
-        $this->assertSame('chain_test_chat_id', $this->groupChat->getChatId());
-        $this->assertSame(GroupChatStatus::NORMAL, $this->groupChat->getStatus());
-        $this->assertSame('链式调用测试群', $this->groupChat->getName());
-        $this->assertSame('这是链式调用测试群公告', $this->groupChat->getNotice());
-        $this->assertSame($agent, $this->groupChat->getAgent());
-        $this->assertSame($corp, $this->groupChat->getCorp());
-        $this->assertSame($owner, $this->groupChat->getOwner());
-        $this->assertInstanceOf(\DateTimeImmutable::class, $this->groupChat->getCreateTime());
-        $this->assertEquals($createTime->format('Y-m-d H:i:s'), $this->groupChat->getCreateTime()->format('Y-m-d H:i:s'));
+
+        // 由于setter现在返回void，不再支持链式调用，改为独立调用
+        $groupChat->setChatId('chain_test_chat_id');
+        $groupChat->setStatus(GroupChatStatus::NORMAL);
+        $groupChat->setName('链式调用测试群');
+        $groupChat->setNotice('这是链式调用测试群公告');
+        $groupChat->setAgent($agent);
+        $groupChat->setCorp($corp);
+        $groupChat->setOwner($owner);
+        $groupChat->setCreateTime($createTime);
+
+        $this->assertSame('chain_test_chat_id', $groupChat->getChatId());
+        $this->assertSame(GroupChatStatus::NORMAL, $groupChat->getStatus());
+        $this->assertSame('链式调用测试群', $groupChat->getName());
+        $this->assertSame('这是链式调用测试群公告', $groupChat->getNotice());
+        $this->assertSame($agent, $groupChat->getAgent());
+        $this->assertSame($corp, $groupChat->getCorp());
+        $this->assertSame($owner, $groupChat->getOwner());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $groupChat->getCreateTime());
+        $this->assertEquals($createTime->format('Y-m-d H:i:s'), $groupChat->getCreateTime()->format('Y-m-d H:i:s'));
     }
 
     /**
      * 测试边界场景
      */
-    public function test_edgeCases_longStrings(): void
+    public function testEdgeCasesLongStrings(): void
     {
+        $groupChat = new GroupChat();
         $longString = str_repeat('x', 1000);
         $maxChatId = str_repeat('a', 64);
         $maxName = str_repeat('名', 127); // 中文字符
-        
-        $this->groupChat->setChatId($maxChatId);
-        $this->groupChat->setName($maxName);
-        $this->groupChat->setNotice($longString);
-        
-        $this->assertSame($maxChatId, $this->groupChat->getChatId());
-        $this->assertSame($maxName, $this->groupChat->getName());
-        $this->assertSame($longString, $this->groupChat->getNotice());
+
+        $groupChat->setChatId($maxChatId);
+        $groupChat->setName($maxName);
+        $groupChat->setNotice($longString);
+
+        $this->assertSame($maxChatId, $groupChat->getChatId());
+        $this->assertSame($maxName, $groupChat->getName());
+        $this->assertSame($longString, $groupChat->getNotice());
     }
 
-    public function test_edgeCases_dateTimeTypes(): void
+    public function testEdgeCasesDateTimeTypes(): void
     {
+        $groupChat = new GroupChat();
         // 测试DateTime
         $dateTime = new \DateTimeImmutable('2024-01-15 12:30:45');
-        $this->groupChat->setCreateTime($dateTime);
-        $this->assertInstanceOf(\DateTimeImmutable::class, $this->groupChat->getCreateTime());
-        $this->assertEquals($dateTime->format('Y-m-d H:i:s'), $this->groupChat->getCreateTime()->format('Y-m-d H:i:s'));
-        
+        $groupChat->setCreateTime($dateTime);
+        $this->assertInstanceOf(\DateTimeImmutable::class, $groupChat->getCreateTime());
+        $this->assertEquals($dateTime->format('Y-m-d H:i:s'), $groupChat->getCreateTime()->format('Y-m-d H:i:s'));
+
         // 测试DateTimeImmutable
         $dateTimeImmutable = new \DateTimeImmutable('2024-02-20 09:15:30');
-        $this->groupChat->setCreateTime($dateTimeImmutable);
-        $this->assertSame($dateTimeImmutable, $this->groupChat->getCreateTime());
+        $groupChat->setCreateTime($dateTimeImmutable);
+        $this->assertSame($dateTimeImmutable, $groupChat->getCreateTime());
     }
 
     /**
      * 测试Collection操作的复杂场景
      */
-    public function test_adminCollection_isIterable(): void
+    public function testAdminCollectionIsIterable(): void
     {
-        /** @var UserInterface&MockObject $admin1 */
+        $groupChat = new GroupChat();
         $admin1 = $this->createMock(UserInterface::class);
-        /** @var UserInterface&MockObject $admin2 */
         $admin2 = $this->createMock(UserInterface::class);
-        
-        $this->groupChat->addAdmin($admin1);
-        $this->groupChat->addAdmin($admin2);
-        
+
+        $groupChat->addAdmin($admin1);
+        $groupChat->addAdmin($admin2);
+
         $admins = [];
-        foreach ($this->groupChat->getAdmins() as $admin) {
+        foreach ($groupChat->getAdmins() as $admin) {
             $admins[] = $admin;
         }
-        
+
         $this->assertCount(2, $admins);
         $this->assertContains($admin1, $admins);
         $this->assertContains($admin2, $admins);
     }
 
-    public function test_memberCollection_isIterable(): void
+    public function testMemberCollectionIsIterable(): void
     {
-        /** @var GroupMember&MockObject $member1 */
+        /**
+         * 使用具体类 GroupMember 创建 Mock 对象的原因：
+         * 1. 测试集合的可迭代性，需要实际的实体对象来模拟
+         * 2. 验证成员添加后的双向关联设置正确性
+         * 3. 确保 foreach 循环能够正确访问所有成员实体
+         * 4. Collection 的迭代行为与实体类的具体实现相关
+         */
+        $groupChat = new GroupChat();
         $member1 = $this->createMock(GroupMember::class);
-        /** @var GroupMember&MockObject $member2 */
+        /**
+         * 使用具体类 GroupMember 创建 Mock 对象的原因：
+         * 1. 测试集合的可迭代性，需要多个实际的实体对象来模拟
+         * 2. 验证成员添加后的双向关联设置正确性
+         * 3. 确保 foreach 循环能够正确访问所有成员实体
+         * 4. Collection 的迭代行为与实体类的具体实现相关
+         */
         $member2 = $this->createMock(GroupMember::class);
-        
+
         $member1->expects($this->once())->method('setGroupChat');
         $member2->expects($this->once())->method('setGroupChat');
-        
-        $this->groupChat->addMember($member1);
-        $this->groupChat->addMember($member2);
-        
+
+        $groupChat->addMember($member1);
+        $groupChat->addMember($member2);
+
         $members = [];
-        foreach ($this->groupChat->getMembers() as $member) {
+        foreach ($groupChat->getMembers() as $member) {
             $members[] = $member;
         }
-        
+
         $this->assertCount(2, $members);
         $this->assertContains($member1, $members);
         $this->assertContains($member2, $members);
@@ -575,77 +602,71 @@ class GroupChatTest extends TestCase
     /**
      * 测试业务逻辑场景
      */
-    public function test_businessScenario_groupChatLifecycle(): void
+    public function testBusinessScenarioGroupChatLifecycle(): void
     {
-        /** @var CorpInterface&MockObject $corp */
+        $groupChat = new GroupChat();
         $corp = $this->createMock(CorpInterface::class);
-        /** @var UserInterface&MockObject $owner */
         $owner = $this->createMock(UserInterface::class);
-        /** @var UserInterface&MockObject $admin */
         $admin = $this->createMock(UserInterface::class);
-        
+
         $createTime = new \DateTimeImmutable('2024-01-15 10:00:00');
-        
+
         // 创建群聊
-        $this->groupChat
-            ->setChatId('wrk_lifecycle_test')
-            ->setName('生命周期测试群')
-            ->setStatus(GroupChatStatus::NORMAL)
-            ->setCorp($corp)
-            ->setOwner($owner)
-            ->setCreateTime($createTime);
-        
+        $groupChat->setChatId('wrk_lifecycle_test');
+        $groupChat->setName('生命周期测试群');
+        $groupChat->setStatus(GroupChatStatus::NORMAL);
+        $groupChat->setCorp($corp);
+        $groupChat->setOwner($owner);
+        $groupChat->setCreateTime($createTime);
+
         // 添加管理员
-        $this->groupChat->addAdmin($admin);
-        
+        $groupChat->addAdmin($admin);
+
         // 验证初始状态
-        $this->assertSame(GroupChatStatus::NORMAL, $this->groupChat->getStatus());
-        $this->assertNotNull($this->groupChat->getOwner());
-        $this->assertCount(1, $this->groupChat->getAdmins());
-        $this->assertTrue($this->groupChat->getMembers()->isEmpty());
-        
+        $this->assertSame(GroupChatStatus::NORMAL, $groupChat->getStatus());
+        $this->assertNotNull($groupChat->getOwner());
+        $this->assertCount(1, $groupChat->getAdmins());
+        $this->assertTrue($groupChat->getMembers()->isEmpty());
+
         // 模拟跟进人离职
-        $this->groupChat->setStatus(GroupChatStatus::RESIGN);
-        $this->assertSame(GroupChatStatus::RESIGN, $this->groupChat->getStatus());
-        
+        $groupChat->setStatus(GroupChatStatus::RESIGN);
+        $this->assertSame(GroupChatStatus::RESIGN, $groupChat->getStatus());
+
         // 模拟继承中
-        $this->groupChat->setStatus(GroupChatStatus::INHERIT_DOING);
-        $this->assertSame(GroupChatStatus::INHERIT_DOING, $this->groupChat->getStatus());
-        
+        $groupChat->setStatus(GroupChatStatus::INHERIT_DOING);
+        $this->assertSame(GroupChatStatus::INHERIT_DOING, $groupChat->getStatus());
+
         // 模拟继承完成
-        $this->groupChat->setStatus(GroupChatStatus::INHERIT_FINISHED);
-        $this->assertSame(GroupChatStatus::INHERIT_FINISHED, $this->groupChat->getStatus());
+        $groupChat->setStatus(GroupChatStatus::INHERIT_FINISHED);
+        $this->assertSame(GroupChatStatus::INHERIT_FINISHED, $groupChat->getStatus());
     }
 
-    public function test_businessScenario_adminManagement(): void
+    public function testBusinessScenarioAdminManagement(): void
     {
-        /** @var UserInterface&MockObject $owner */
+        $groupChat = new GroupChat();
         $owner = $this->createMock(UserInterface::class);
-        /** @var UserInterface&MockObject $admin1 */
         $admin1 = $this->createMock(UserInterface::class);
-        /** @var UserInterface&MockObject $admin2 */
         $admin2 = $this->createMock(UserInterface::class);
-        /** @var UserInterface&MockObject $admin3 */
         $admin3 = $this->createMock(UserInterface::class);
-        
-        $this->groupChat->setOwner($owner);
-        
+
+        $groupChat->setOwner($owner);
+
         // 添加多个管理员
-        $this->groupChat->addAdmin($admin1);
-        $this->groupChat->addAdmin($admin2);
-        $this->groupChat->addAdmin($admin3);
-        
-        $this->assertCount(3, $this->groupChat->getAdmins());
-        
+        $groupChat->addAdmin($admin1);
+        $groupChat->addAdmin($admin2);
+        $groupChat->addAdmin($admin3);
+
+        $this->assertCount(3, $groupChat->getAdmins());
+
         // 移除一个管理员
-        $this->groupChat->removeAdmin($admin2);
-        
-        $this->assertCount(2, $this->groupChat->getAdmins());
-        $this->assertTrue($this->groupChat->getAdmins()->contains($admin1));
-        $this->assertFalse($this->groupChat->getAdmins()->contains($admin2));
-        $this->assertTrue($this->groupChat->getAdmins()->contains($admin3));
-        
+        $groupChat->removeAdmin($admin2);
+
+        $this->assertCount(2, $groupChat->getAdmins());
+        $this->assertTrue($groupChat->getAdmins()->contains($admin1));
+        $this->assertFalse($groupChat->getAdmins()->contains($admin2));
+        $this->assertTrue($groupChat->getAdmins()->contains($admin3));
+
         // 群主不在管理员列表中（这是预期的，因为群主和管理员是分开管理的）
-        $this->assertFalse($this->groupChat->getAdmins()->contains($owner));
+        $this->assertFalse($groupChat->getAdmins()->contains($owner));
     }
-} 
+}

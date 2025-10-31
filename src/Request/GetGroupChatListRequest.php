@@ -25,7 +25,7 @@ class GetGroupChatListRequest extends ApiRequest
     private ?int $statusFilter = null;
 
     /**
-     * @var array|null 群主过滤 用户ID列表
+     * @var array<string>|null 群主过滤 用户ID列表
      */
     private ?array $ownerUserIds = [];
 
@@ -82,11 +82,17 @@ class GetGroupChatListRequest extends ApiRequest
         $this->statusFilter = $statusFilter;
     }
 
+    /**
+     * @return array<string>|null
+     */
     public function getOwnerUserIds(): ?array
     {
         return $this->ownerUserIds;
     }
 
+    /**
+     * @param array<string>|null $ownerUserIds
+     */
     public function setOwnerUserIds(?array $ownerUserIds): void
     {
         $this->ownerUserIds = $ownerUserIds;

@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Tourze\DoctrineSnowflakeBundle\Service\SnowflakeIdGenerator;
+use Symfony\Component\Validator\Constraints as Assert;
 use Tourze\DoctrineSnowflakeBundle\Traits\SnowflakeKeyAware;
 use Tourze\DoctrineTimestampBundle\Traits\CreateTimeAware;
 use Tourze\WechatWorkContracts\AgentInterface;
@@ -23,16 +23,20 @@ class GroupChat implements \Stringable
     use SnowflakeKeyAware;
 
     #[ORM\Column(length: 64, options: ['comment' => '客户群ID'])]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 64)]
     private ?string $chatId = null;
 
     #[ORM\Column(nullable: true, enumType: GroupChatStatus::class, options: ['comment' => '跟进状态'])]
+    #[Assert\Choice(callback: [GroupChatStatus::class, 'cases'])]
     private ?GroupChatStatus $status = null;
 
-
     #[ORM\Column(length: 255, nullable: true, options: ['comment' => '群名称'])]
+    #[Assert\Length(max: 255)]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true, options: ['comment' => '群公告'])]
+    #[Assert\Length(max: 65535)]
     private ?string $notice = null;
 
     #[ORM\ManyToOne]
@@ -44,10 +48,16 @@ class GroupChat implements \Stringable
     #[ORM\ManyToOne]
     private ?UserInterface $owner = null;
 
+    /**
+     * @var Collection<int, UserInterface>
+     */
     #[ORM\ManyToMany(targetEntity: UserInterface::class, fetch: 'EXTRA_LAZY')]
     private Collection $admins;
 
-    #[ORM\OneToMany(targetEntity: GroupMember::class, mappedBy: 'groupChat', orphanRemoval: true)]
+    /**
+     * @var Collection<int, GroupMember>
+     */
+    #[ORM\OneToMany(targetEntity: GroupMember::class, mappedBy: 'groupChat', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
     private Collection $members;
 
     public function __construct()
@@ -61,11 +71,9 @@ class GroupChat implements \Stringable
         return $this->chatId;
     }
 
-    public function setChatId(string $chatId): static
+    public function setChatId(string $chatId): void
     {
         $this->chatId = $chatId;
-
-        return $this;
     }
 
     public function getStatus(): ?GroupChatStatus
@@ -73,24 +81,19 @@ class GroupChat implements \Stringable
         return $this->status;
     }
 
-    public function setStatus(?GroupChatStatus $status): static
+    public function setStatus(?GroupChatStatus $status): void
     {
         $this->status = $status;
-
-        return $this;
     }
-
 
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(?string $name): static
+    public function setName(?string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
     public function getNotice(): ?string
@@ -98,11 +101,9 @@ class GroupChat implements \Stringable
         return $this->notice;
     }
 
-    public function setNotice(?string $notice): static
+    public function setNotice(?string $notice): void
     {
         $this->notice = $notice;
-
-        return $this;
     }
 
     public function getAgent(): ?AgentInterface
@@ -110,11 +111,9 @@ class GroupChat implements \Stringable
         return $this->agent;
     }
 
-    public function setAgent(?AgentInterface $agent): static
+    public function setAgent(?AgentInterface $agent): void
     {
         $this->agent = $agent;
-
-        return $this;
     }
 
     public function getCorp(): ?CorpInterface
@@ -122,11 +121,9 @@ class GroupChat implements \Stringable
         return $this->corp;
     }
 
-    public function setCorp(?CorpInterface $corp): static
+    public function setCorp(?CorpInterface $corp): void
     {
         $this->corp = $corp;
-
-        return $this;
     }
 
     public function getOwner(): ?UserInterface
@@ -134,11 +131,9 @@ class GroupChat implements \Stringable
         return $this->owner;
     }
 
-    public function setOwner(?UserInterface $owner): static
+    public function setOwner(?UserInterface $owner): void
     {
         $this->owner = $owner;
-
-        return $this;
     }
 
     /**
@@ -149,20 +144,16 @@ class GroupChat implements \Stringable
         return $this->admins;
     }
 
-    public function addAdmin(UserInterface $admin): static
+    public function addAdmin(UserInterface $admin): void
     {
         if (!$this->admins->contains($admin)) {
             $this->admins->add($admin);
         }
-
-        return $this;
     }
 
-    public function removeAdmin(UserInterface $admin): static
+    public function removeAdmin(UserInterface $admin): void
     {
         $this->admins->removeElement($admin);
-
-        return $this;
     }
 
     /**
@@ -173,17 +164,15 @@ class GroupChat implements \Stringable
         return $this->members;
     }
 
-    public function addMember(GroupMember $member): static
+    public function addMember(GroupMember $member): void
     {
         if (!$this->members->contains($member)) {
             $this->members->add($member);
             $member->setGroupChat($this);
         }
-
-        return $this;
     }
 
-    public function removeMember(GroupMember $member): static
+    public function removeMember(GroupMember $member): void
     {
         if ($this->members->removeElement($member)) {
             // set the owning side to null (unless already changed)
@@ -191,8 +180,6 @@ class GroupChat implements \Stringable
                 $member->setGroupChat(null);
             }
         }
-
-        return $this;
     }
 
     public function __toString(): string
