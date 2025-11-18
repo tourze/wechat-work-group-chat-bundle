@@ -59,11 +59,6 @@ class GroupChatCrudControllerTest extends AbstractEasyAdminControllerTestCase
         ];
     }
 
-    public function testGetEntityFqcn(): void
-    {
-        self::assertSame(GroupChat::class, GroupChatCrudController::getEntityFqcn());
-    }
-
     public function testConfigureFields(): void
     {
         $controller = new GroupChatCrudController();

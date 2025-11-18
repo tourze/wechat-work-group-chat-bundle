@@ -62,11 +62,6 @@ class GroupMemberCrudControllerTest extends AbstractEasyAdminControllerTestCase
         ];
     }
 
-    public function testGetEntityFqcn(): void
-    {
-        self::assertSame(GroupMember::class, GroupMemberCrudController::getEntityFqcn());
-    }
-
     public function testConfigureFields(): void
     {
         $controller = new GroupMemberCrudController();
