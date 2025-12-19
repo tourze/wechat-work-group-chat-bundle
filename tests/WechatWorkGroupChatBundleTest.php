@@ -9,10 +9,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tourze\PHPUnitSymfonyKernelTest\AbstractBundleTestCase;
 use WechatWorkGroupChatBundle\WechatWorkGroupChatBundle;
 
-/**
- * @internal
- * @phpstan-ignore symplify.forbiddenExtendOfNonAbstractClass
- */
+
 #[CoversClass(WechatWorkGroupChatBundle::class)]
 #[RunTestsInSeparateProcesses]
 final class WechatWorkGroupChatBundleTest extends AbstractBundleTestCase
