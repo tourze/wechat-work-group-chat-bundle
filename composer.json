@@ -30,7 +30,7 @@
     "tourze/easy-admin-menu-bundle": "1.0.*",
     "tourze/enum-extra": "1.0.*",
     "tourze/http-client-bundle": "1.1.*",
-    "tourze/symfony-cron-job-bundle": "1.1.*",
+    "tourze/symfony-cron-job-bundle": "1.2.*",
     "tourze/wechat-work-bundle": "1.1.*",
     "tourze/wechat-work-contracts": "1.0.*",
     "tourze/wechat-work-external-contact-bundle": "0.0.*"
